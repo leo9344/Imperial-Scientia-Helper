@@ -10,16 +10,15 @@ A Chrome extension for batch downloading course materials from Imperial College 
 - 📦 Download selected files as a zip package
 - ✨ Clean and intuitive user interface
 
-## Installation
+## Installation from source code (Recommended)
 
-### Method 1: Install from .crx file (Recommended)
+<!-- ### Method 1: Install from .crx file 
 1. Download the latest `.crx` file from the [Releases](../../releases) page
 2. Open Chrome and navigate to `chrome://extensions/`
 3. Enable "Developer mode" in the top right
 4. Drag and drop the `.crx` file into the Chrome extensions page
-5. Click "Add extension" in the popup dialog
-
-### Method 2: Install from source code
+5. Click "Add extension" in the popup dialog -->
+ 
 1. Download this repository
 2. Open Chrome and navigate to `chrome://extensions/`
 3. Enable "Developer mode" in the top right
