@@ -1,0 +1,30 @@
+{
+    "manifest_version": 3,
+    "name": "Imperial Scientia Helper",
+    "version": "1.0",
+    "description": "Download course materials from Imperial College London's Scientia platform",
+    "permissions": [
+      "activeTab",
+      "downloads",
+      "scripting",
+      "storage"
+    ],
+    "host_permissions": [
+      "https://scientia.doc.ic.ac.uk/*"
+    ],
+    "action": {
+      "default_popup": "popup/popup.html",
+      "default_icon": {
+        "16": "icons/icon16.png",
+        "48": "icons/icon48.png",
+        "128": "icons/icon128.png"
+      }
+    },
+    "background": {
+      "service_worker": "background.js"
+    },
+    "content_scripts": [{
+      "matches": ["https://scientia.doc.ic.ac.uk/*"],
+      "js": ["content.js"]
+    }]
+  }

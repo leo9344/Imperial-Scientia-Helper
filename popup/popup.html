@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Course Material Downloader</title>
+  <style>
+    body {
+      width: 500px;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+    }
+    
+    .section {
+      margin-bottom: 20px;
+    }
+    
+    .section-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    
+    .section-title {
+      font-weight: bold;
+      margin-right: 10px;
+    }
+    
+    .file-list {
+      margin-left: 20px;
+    }
+    
+    .file-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 5px;
+    }
+    
+    .filters {
+      margin-bottom: 20px;
+      padding: 10px;
+      background-color: #f5f5f5;
+      border-radius: 4px;
+    }
+    
+    .download-btn {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    
+    .download-btn:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <div class="filters">
+    <label>Filter by type:</label>
+    <select id="fileTypeFilter">
+      <option value="all">All</option>
+      <option value="pdf">PDF</option>
+      <option value="pptx">PPTX</option>
+      <option value="video">Video</option>
+    </select>
+    <button id="selectAll">Select All</button>
+    <button id="deselectAll">Deselect All</button>
+  </div>
+  
+  <div id="sections"></div>
+  
+  <button id="downloadBtn" class="download-btn">Download Selected Files</button>
+  
+  <script src="popup.js"></script>
+</body>
+</html>
