@@ -39,38 +39,74 @@
       padding: 10px;
       background-color: #f5f5f5;
       border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .filter-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    #fileTypeFilter {
+      padding: 5px;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+    }
+    
+    #selectAll, #deselectAll {
+      padding: 5px 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      background-color: white;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    
+    #selectAll:hover, #deselectAll:hover {
+      background-color: #eee;
     }
     
     .download-btn {
       background-color: #4CAF50;
       color: white;
-      padding: 10px 20px;
+      padding: 8px 20px;
       border: none;
       border-radius: 4px;
       cursor: pointer;
+      transition: background-color 0.2s;
+      margin-left: 24px;
+      font-weight: 500;
     }
     
     .download-btn:hover {
       background-color: #45a049;
     }
+    
+    .download-btn:disabled {
+      background-color: #cccccc;
+      cursor: not-allowed;
+    }
   </style>
 </head>
 <body>
   <div class="filters">
-    <label>Filter by type:</label>
-    <select id="fileTypeFilter">
-      <option value="all">All</option>
-      <option value="pdf">PDF</option>
-      <option value="pptx">PPTX</option>
-      <option value="video">Video</option>
-    </select>
-    <button id="selectAll">Select All</button>
-    <button id="deselectAll">Deselect All</button>
+    <div class="filter-controls">
+      <label>Filter by type:</label>
+      <select id="fileTypeFilter">
+        <option value="all">All</option>
+        <option value="pdf">PDF</option>
+        <option value="pptx">PPTX</option>
+      </select>
+      <button id="selectAll">Select All</button>
+      <button id="deselectAll">Deselect All</button>
+    </div>
+    <button id="downloadBtn" class="download-btn">Download Selected Files</button>
   </div>
   
   <div id="sections"></div>
-  
-  <button id="downloadBtn" class="download-btn">Download Selected Files</button>
   
   <script src="popup.js"></script>
 </body>

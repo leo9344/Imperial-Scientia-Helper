@@ -69,7 +69,7 @@ function handleFilter() {
   const filterValue = document.getElementById('fileTypeFilter').value;
   
   document.querySelectorAll('.file-checkbox').forEach(checkbox => {
-    const fileType = checkbox.dataset.type;
+    const fileType = checkbox.dataset.type.toLowerCase();
     const fileItem = checkbox.parentElement;
     
     if (filterValue === 'all' || fileType === filterValue) {
@@ -97,8 +97,89 @@ function toggleAllCheckboxes(checked) {
   });
 }
 
+function updateDownloadStatus(message) {
+  const downloadBtn = document.getElementById('downloadBtn');
+  downloadBtn.textContent = message;
+}
+
+// 在初始化时添加消息监听
+chrome.runtime.onMessage.addListener((message) => {
+  switch (message.action) {
+    case 'updateProgress':
+      updateDownloadStatus(message.message);
+      break;
+    case 'processZipDownload':
+      try {
+        // 将 base64 转换回 blob
+        const base64Response = message.data;
+        
+        // 从 base64 字符串中提取实际的数据部分
+        const byteString = atob(base64Response.split(',')[1]);
+        
+        // 将字符串转换为 Uint8Array
+        const arrayBuffer = new ArrayBuffer(byteString.length);
+        const uint8Array = new Uint8Array(arrayBuffer);
+        
+        for (let i = 0; i < byteString.length; i++) {
+          uint8Array[i] = byteString.charCodeAt(i);
+        }
+        
+        // 创建 blob
+        const blob = new Blob([arrayBuffer], { type: 'application/zip' });
+        const url = URL.createObjectURL(blob);
+        
+        chrome.downloads.download({
+          url: url,
+          filename: message.filename,
+          saveAs: true
+        }, (downloadId) => {
+          if (chrome.runtime.lastError) {
+            console.error('Download failed:', chrome.runtime.lastError);
+            updateDownloadStatus('Download failed');
+          }
+          
+          // 监听下载完成
+          chrome.downloads.onChanged.addListener(function onChanged(delta) {
+            if (delta.id === downloadId && delta.state) {
+              if (delta.state.current === 'complete') {
+                URL.revokeObjectURL(url);
+                setTimeout(() => {
+                  updateDownloadStatus('Download Selected Files');
+                  document.getElementById('downloadBtn').disabled = false;
+                }, 2000);
+                chrome.downloads.onChanged.removeListener(onChanged);
+              } else if (delta.state.current === 'interrupted') {
+                console.error('Download interrupted');
+                updateDownloadStatus('Download failed');
+                URL.revokeObjectURL(url);
+                document.getElementById('downloadBtn').disabled = false;
+                chrome.downloads.onChanged.removeListener(onChanged);
+              }
+            }
+          });
+        });
+      } catch (error) {
+        console.error('Error processing zip:', error);
+        updateDownloadStatus('Error processing zip');
+        setTimeout(() => {
+          updateDownloadStatus('Download Selected Files');
+          document.getElementById('downloadBtn').disabled = false;
+        }, 3000);
+      }
+      break;
+    case 'downloadError':
+      updateDownloadStatus('Error occurred');
+      setTimeout(() => {
+        updateDownloadStatus('Download Selected Files');
+        document.getElementById('downloadBtn').disabled = false;
+      }, 3000);
+      break;
+  }
+});
+
 async function handleDownload() {
   const selectedFiles = [];
+  const downloadBtn = document.getElementById('downloadBtn');
   
   document.querySelectorAll('.file-checkbox:checked').forEach(checkbox => {
     const sectionIndex = parseInt(checkbox.dataset.section);
@@ -113,6 +194,9 @@ async function handleDownload() {
   });
   
   if (selectedFiles.length > 0) {
+    downloadBtn.disabled = true;
+    updateDownloadStatus('Preparing files...');
+    
     chrome.runtime.sendMessage({
       action: "downloadFiles",
       files: selectedFiles

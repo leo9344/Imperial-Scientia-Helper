@@ -10,7 +10,8 @@
       "storage"
     ],
     "host_permissions": [
-      "https://scientia.doc.ic.ac.uk/*"
+      "https://scientia.doc.ic.ac.uk/*",
+      "https://exams.doc.ic.ac.uk/*"
     ],
     "action": {
       "default_popup": "popup/popup.html",

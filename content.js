@@ -18,8 +18,15 @@ function extractSections() {
         const fileName = link.querySelector('.c-fGHEql span').textContent;
         const url = new URL(link.href).searchParams.get('url');
         
-        // Determine file type from the fileName
-        const fileType = fileName.split('.').pop().toLowerCase();
+        let fileType = 'other';
+        let urlExtension = '';
+        if (url) {
+          const urlPath = decodeURIComponent(url);
+          urlExtension = urlPath.split('.').pop().toLowerCase();
+          if (['pdf', 'pptx'].includes(urlExtension)) {
+            fileType = urlExtension;
+          }
+        }
         
         // Get tags
         const tags = Array.from(link.querySelectorAll('.c-SvHcH')).map(tag => 
@@ -30,6 +37,7 @@ function extractSections() {
           fileName,
           url,
           fileType,
+          urlExtension,
           tags
         };
       });
